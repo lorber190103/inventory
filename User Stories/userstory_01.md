@@ -10,8 +10,8 @@ Item Database
 A Developer creates a item Database
 
 ## Input Data
-Item Names
-Number of Items
+Item Names |
+Number of Items |
 Location of Items
 
 ## Output Data

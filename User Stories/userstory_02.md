@@ -10,7 +10,7 @@ Website
 A Developer creates a Website
 
 ## Input Data
-HTML
+HTML |
 CSS
 
 ## Output Data

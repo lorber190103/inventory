@@ -10,7 +10,7 @@ Updating Items
 A Developer creates a button that allows you to edit items
 
 ## Input Data
-A button
+A button |
 Function that allows you to update the item in the database
 
 ## Output Data
