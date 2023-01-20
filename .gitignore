@@ -2,4 +2,4 @@
 venv
 __pycache__
 config.jason
-app.db
+*.db
