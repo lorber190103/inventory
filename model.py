@@ -21,4 +21,7 @@ class Item(Base):
     quantity = Column(Integer, nullable = False)
     location = Column(String, nullable = False)
 
+    def __repr__(self) -> str:
+        return f"{self.company_id}: {self.name}"
+
 Base.metadata.create_all(engine)
