@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from model import Company, Item
 
-engine = create_engine("sqlite:///inventory.db", echo=True)
+engine = create_engine("sqlite:///inventory.db")
 fake = Faker()
 Session = sessionmaker(bind = engine)
 session = Session()

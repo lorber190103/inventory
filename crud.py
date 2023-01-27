@@ -18,7 +18,7 @@ def read():
     return filtered
 
 def updatee():
-    session.query(Item).update({Item.location: 'A12'})
+    session.query(Item).filter(Item.name.is_('FakeProduct')).update({Item.location: 'A12'})
     session.commit()
 
 def deletee():

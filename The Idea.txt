@@ -1,0 +1,34 @@
+[Name of Companys]
+Choose Company: [Input of User]
+In Company Database find [Input of User] and get ID of Company
+[Choices (READ, ADD, UPDATE, DELETE, EXIT)]
+Choose what you want to do: [INPUT OF USER]
+READ:
+def read():
+    filtered = session.query(Item).filter(Item.company_id.is_([ID of Comapny that user chose])).all()[0]
+    return filtered
+
+ADD:
+def create():
+    session.add(Item(company_id=[ID of Company that user chose],
+                     name=[Input of User],
+                     quantity=[Input of User],
+                     location=[Input of User]))
+    session.commit()
+
+UPDATE:
+def updatee():
+    session.query(Item).filter(Item.name.is_([INPUT OF USER])).update({Item.[WHATEVER USER WANTS TO CHANGE]: [INPUT OF USER]})
+    session.commit()
+
+DELETE:
+def deletee():
+    letsdoit = session.query(Item).filter(Item.name.is_([INPUT OF USER])).all()[0]
+    session.delete(letsdoit)
+    session.commit()
+
+EXIT:
+Just exit the programm
+
+If done with one it just goes back to ask you what you want to do.
+Except EXIT of course.
