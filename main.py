@@ -7,32 +7,42 @@ session = Session()
 
 print("Chang-Fisher | Sheppard-Tucker | Faulkner-Howard | Wagner LLC | Campos PLC")
 company = input("Choose a company: ")
-c_id = session.query(Company).filter(Company.name.is_(str(company))).all()[0]
+
+if len(company) < 4:
+    raise Exception("Be more specific with your answer")
+
+c_id = session.query(Company).filter(Company.name.like(str('%'+company+'%'))).all()[0]
 idk_dict = {'name':Item.name, 'quantity':Item.quantity, 'location':Item.location}
 
 def READ():
-    category = input("Category: ")
-    contents = input("Contents: ")
-    real = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].is_(str(contents.capitalize()))).all()
-    print(real)
+    show_all = input("Would you like to see all contents?:")
+
+    if show_all.lower() != "yes" and show_all.lower() != "no":
+        print("\nYou can only answer this question with yes or no")
+        pass
+
+    if show_all.lower() == "yes":
+        s_all = session.query(Item).filter(Item.company_id.is_(str(c_id))).all()
+        print(s_all)
+    elif show_all.lower() == "no":
+        category = input("Category: ")
+        contents = input("Contents: ")
+        s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].like('%'+str(contents.capitalize()+'%'))).all()
+        print(s_filtered)
 
 
 def CREATE():
     Name = input("Name of the item: ")
     if type(Name) != str:
-        raise TypeError("Name must be a string")
-
-    # Raises an Exception if Name contains numbers
-    # if any(str.isdigit() for str in Name):
-    #   raise Exception("Name can't contain numbers")
+        raise TypeError("\nName must be a string")
 
     Quantity = input("Quantity of the item: ")
     if type(Quantity) != int:
-        raise TypeError("Quantity must be a number")
+        raise TypeError("\nQuantity must be a number")
 
     Location = input("Location of the item: ")
     if len(Location) > 3:
-        raise IndexError("Location can't have more than 3 characters")
+        raise IndexError("\nLocation can't have more than 3 characters")
 
     session.add(Item(company_id=str(c_id),
                      name=str(Name.capitalize()),
@@ -50,18 +60,27 @@ def UPDATE():
 
 
 def DELETE():
-    category = input("In what categorie is it: ")
+    category = input("In what categorie is it located: ")
     contents = input("What contents do you want to delete: ")
-    for_deletion = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].is_(str(contents.capitalize()))).all()[0]
-    session.delete(for_deletion)
-    session.commit()
-
+    s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].like('%'+str(contents.capitalize()+'%'))).all()
+    print(s_filtered)
+    if len(s_filtered) < 2: 
+        question = input("\nIs this the item you would like to delete?: ")
+        if question.lower == "yes":
+            for_deletion = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].is_(str(contents.capitalize()))).all()[0]
+            session.delete(for_deletion)
+            session.commit()
+        elif question.lower == "no":
+            pass
+    else:
+        print("\nPlease be more specific")
+        pass
 
 def EXIT():
     exit()
 
 while 1:
-    action = input("What would you like to do: ")
+    action = input("\nWhat would you like to do: ")
     function_dict = {
         'create':CREATE,
         'read':READ,
@@ -69,5 +88,4 @@ while 1:
         'update':UPDATE,
         'exit':EXIT,
     }
-
     function_dict[action.lower()]()
