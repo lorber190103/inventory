@@ -53,10 +53,20 @@ def CREATE():
 
 def UPDATE():
     name_of_item = input("Name of the item: ")
-    category = input("Category of item you want to change: ")
-    change = input("Change Contents to: ")
-    session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.name.is_(str(name_of_item.capitalize()))).update({idk_dict[category.lower()]: str(change.capitalize())})
-    session.commit()
+    s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.name.like('%'+str(name_of_item.capitalize()+'%'))).all()
+    print(s_filtered)
+    if len(s_filtered) < 2: 
+        question = input("\nIs this the item you would like to update?: ")
+        if question.lower() == "yes":
+            category = input("Category you want to change: ")
+            change = input("Change Contents to: ")
+            session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.name.like('%'+str(name_of_item.capitalize()+'%'))).update({idk_dict[category.lower()]: str(change.capitalize())})
+            session.commit()
+        elif question.lower() == "no":
+            pass
+    else:
+        print("\nPlease be more specific")
+        pass
 
 
 def DELETE():
@@ -66,11 +76,12 @@ def DELETE():
     print(s_filtered)
     if len(s_filtered) < 2: 
         question = input("\nIs this the item you would like to delete?: ")
-        if question.lower == "yes":
-            for_deletion = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].is_(str(contents.capitalize()))).all()[0]
+        if question.lower() == "yes":
+            for_deletion = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].like('%'+str(contents.capitalize()+'%'))).all()[0]
             session.delete(for_deletion)
             session.commit()
-        elif question.lower == "no":
+            print("Item deleted")
+        elif question.lower() == "no":
             pass
     else:
         print("\nPlease be more specific")
@@ -80,7 +91,8 @@ def EXIT():
     exit()
 
 while 1:
-    action = input("\nWhat would you like to do: ")
+    print("-----------------------------------")
+    action = input("What would you like to do: ")
     function_dict = {
         'create':CREATE,
         'read':READ,
@@ -88,4 +100,8 @@ while 1:
         'update':UPDATE,
         'exit':EXIT,
     }
-    function_dict[action.lower()]()
+    if action in function_dict:
+        function_dict[action.lower()]()
+    else:
+        print("This function does not exist.")
+        pass

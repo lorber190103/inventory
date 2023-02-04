@@ -25,6 +25,7 @@ class Item(Base):
     location = Column(String(3), nullable = False)
 
     def __repr__(self) -> str:
-        return f"\nName:{self.name} | Quantity:{self.quantity} | Location:{self.location}"
+        return f"\nName: {self.name} | Quantity: {self.quantity} | Location: {self.location}"
+
 
 Base.metadata.create_all(engine)
