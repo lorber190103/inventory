@@ -27,10 +27,18 @@ def READ():
             print(i)
     elif show_all.lower() == "no":
         category = input("Category: ")
-        contents = input("Contents: ")
-        s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].like('%'+str(contents.capitalize()+'%'))).all()
-        for i in s_filtered:
-            print(i)
+        if category in idk_dict:
+            contents = input("Contents: ")
+            s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].like('%'+str(contents.capitalize()+'%'))).all()
+            if len(s_filtered) < 1:
+                print("There are no contents with that name")
+                pass
+            else:
+                for i in s_filtered:
+                    print(i)
+        else:
+            print("This category does not exist.")
+            pass
 
 
 def CREATE():
@@ -55,71 +63,70 @@ def CREATE():
         for i in again:
             print(i)
     else:
-        question = input("This item already exists do you still want to proceed? ")
-        if question != "yes" and question != "no":
-            print("\nThis question must be answered with yes or no")
-            pass
-        if question.lower() == "yes":
-            session.add(Item(company_id=str(c_id),
-                name=str(Name.capitalize()),
-                quantity=(Quantity),
-                location=str(Location.capitalize())))
-            session.commit()
-            print("Item created")
-            for i in s_filtered:
-                print(i)
-        elif question.lower() == "no":
-            pass
+        print("There is already an item with the same attributes")
+        pass
 
 
 def UPDATE():
-    name_of_item = input("Name of the item: ")
-    s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.name.like('%'+str(name_of_item.capitalize()+'%'))).all()
-    for i in s_filtered:
-        print(i)
-    if len(s_filtered) < 2: 
-        question = input("Is this the item you would like to update?: ")
-        if question != "yes" and question != "no":
-            print("\nThis question must be answered with yes or no")
-            pass
-        if question.lower() == "yes":
-            category = input("Category you want to change: ")
-            change = input("Change Contents to: ")
-            session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.name.like('%'+str(name_of_item.capitalize()+'%'))).update({idk_dict[category.lower()]: str(change.capitalize())})
-            session.commit()
-            print("Item info updated")
-        elif question.lower() == "no":
-            print("Try again")
-            pass
-    else:
-        print("\nPlease be more specific")
+    name_of_item = input("Full Name of the item: ")
+    location_of_item = input("Location of item: ")
+    s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.location.like(str(location_of_item.capitalize()))&Item.name.is_(str(name_of_item.capitalize()))).all()
+    if len(s_filtered) < 1:
+        print("There are no contents with that name and location")
         pass
+    else:
+        for i in s_filtered:
+            print(i)
+        if len(s_filtered) < 2: 
+            question = input("Is this the item you would like to update?: ")
+            if question != "yes" and question != "no":
+                print("\nThis question must be answered with yes or no")
+                pass
+            if question.lower() == "yes":
+                category = input("Category you want to change: ")
+                change = input("Change Contents to: ")
+                session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.location.is_(str(location_of_item.capitalize()))&Item.name.is_(str(name_of_item.capitalize()))).update({idk_dict[category.lower()]: str(change.capitalize())})
+                check = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].is_(str(change.capitalize()))&Item.name.is_(str(name_of_item.capitalize()))).all()
+                if len(check) > 1:
+                    print("There is already an item with the same attributes")
+                    pass
+                else:
+                    print("Item info updated")
+                session.commit()
+            elif question.lower() == "no":
+                print("Try again")
+                pass
+        else:
+            print("\nPlease be more specific")
+            pass
 
 
 def DELETE():
-    category = input("In what categorie is it located: ")
-    contents = input("What contents do you want to delete: ")
-    s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].like('%'+str(contents.capitalize()+'%'))).all()
-    for i in s_filtered:
-        print(i)
-    
-    if len(s_filtered) < 2: 
-        question = input("Is this the item you would like to delete?: ")
-        if question != "yes" and question != "no":
-            print("\nThis question must be answered with yes or no")
-            pass
-
-        if question.lower() == "yes":
-            for_deletion = session.query(Item).filter(Item.company_id.is_(str(c_id))&idk_dict[category.lower()].like('%'+str(contents.capitalize()+'%'))).all()[0]
-            session.delete(for_deletion)
-            session.commit()
-            print("Item deleted")
-        elif question.lower() == "no":
-            print("Try again")
-            pass
-    else:
-        print("\nPlease be more specific")
+    name_of_item = input("Full Name of Item: ")
+    location_of_item = input("Full Location of item: ")
+    s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.location.is_(str(location_of_item.capitalize()))&Item.name.is_(str(name_of_item.capitalize()))).all()
+    if len(s_filtered) < 1:
+        print("There are no contents with that name and location")
         pass
+    else:
+        for i in s_filtered:
+            print(i)
+        if len(s_filtered) < 2: 
+            question = input("Is this the item you would like to delete?: ")
+            if question != "yes" and question != "no":
+                print("\nThis question must be answered with yes or no")
+                pass
+            if question.lower() == "yes":
+                for_deletion = session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.location.is_(str(location_of_item.capitalize()))&Item.name.is_(str(name_of_item.capitalize()))).all()[0]
+                session.delete(for_deletion)
+                session.commit()
+                print("Item deleted")
+            elif question.lower() == "no":
+                print("Try again")
+                pass
+        else:
+            print("\nPlease be more specific")
+            pass
 
 def EXIT():
     exit()
