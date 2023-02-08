@@ -1,5 +1,6 @@
 *.egg-info
 venv
 __pycache__
-config.jason
+config.json
 *.db
+*.json

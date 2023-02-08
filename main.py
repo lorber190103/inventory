@@ -4,12 +4,17 @@ from model import Item, Company
 engine = create_engine("sqlite:///inventory.db")
 Session = sessionmaker(bind = engine)
 session = Session()
+i = 0
 
-print("Chang-Fisher | Sheppard-Tucker | Faulkner-Howard | Wagner LLC | Campos PLC")
-company = input("Choose a company: ")
-
-if len(company) < 4:
-    raise Exception("Be more specific with your answer")
+while i == 0:
+    print("-----------------------------------")
+    print("Chang-Fisher | Sheppard-Tucker | Faulkner-Howard | Wagner LLC | Campos PLC")
+    company = input("Choose a company: ")
+    if len(company) < 4:
+        print("Be more specific with your answer")
+        pass
+    else:
+        i = i + 1
 
 c_id = session.query(Company).filter(Company.name.like(str('%'+company+'%'))).all()[0]
 idk_dict = {'name':Item.name, 'quantity':Item.quantity, 'location':Item.location}
@@ -42,15 +47,33 @@ def READ():
 
 
 def CREATE():
-    Name = input("Name of the item: ")
-    if Name.isalpha() == False and Name.isnumeric() == True:
-        raise TypeError("Name must have 1 letter at least")
-    Quantity = input("Quantity of the item: ")
-    if Quantity.isnumeric() == False:
-        raise TypeError("\nQuantity must only be numbers")
-    Location = input("Location of the item: ")
-    if len(Location) > 3:
-        raise IndexError("\nLocation can't have more than 3 characters")
+    Name = None
+    Quantity = None
+    Location = None
+
+    while Name is None:
+        Name = input("Name of the item: ")
+        if not Name.isalpha() and Name.isnumeric():
+            print("Name must at least have 1 letter")
+            Name is None
+            pass
+
+    while Quantity is None:
+        Quantity = input("Quantity of the item: ")
+        if not Quantity.isnumeric():
+            print("\nQuantity must only be numbers")
+            Quantity = None
+            pass
+
+    while Location is None:
+        Location = input("Location of the item: ")
+        if len(Location) > 3:
+            print("\nLocation can't have more than 3 characters")
+            Location = None
+            pass
+        
+
+
     s_filtered = session.query(Item).filter(Item.company_id.is_(str(c_id))&Item.name.is_(str(Name.capitalize()))&Item.location.is_(str(Location.capitalize()))).all()
     if len(s_filtered) < 1:
         session.add(Item(company_id=str(c_id),
@@ -146,3 +169,4 @@ while 1:
     else:
         print("This function does not exist.")
         pass
+
