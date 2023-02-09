@@ -1,11 +1,13 @@
 from faker import Faker
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+
 from model import Company, Item
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 engine = create_engine("sqlite:///inventory.db")
 fake = Faker()
-Session = sessionmaker(bind = engine)
+Session = sessionmaker(bind=engine)
 session = Session()
 items = open("items.md", "r")
 item = items.read()
@@ -18,15 +20,17 @@ def fill_company():
         session.add(Company(name=fake.company()))
     session.commit()
 
+
 def fill_item():
     i = 0
     for _ in range(250):
         session.add(Item(company_id=fake.random_int(min=1, max=5),
                          name=item_into[i],
                          quantity=fake.random_int(min=1, max=100),
-                         location=fake.bothify('?##',letters='ABCDE')))
+                         location=fake.bothify('?##', letters='ABCDE')))
         i = i + 1
     session.commit()
+
 
 fill_company()
 fill_item()
