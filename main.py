@@ -373,6 +373,7 @@ def EXIT():
 
 while 1:
     print("-----------------------------------")
+    print("READ | CREATE | UPDATE | DELETE | EXIT")
     action = input("What would you like to do: ")
     function_dict = {
         'create': CREATE,
