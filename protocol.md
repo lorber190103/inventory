@@ -45,7 +45,10 @@
 - Added whitelist.txt
 
 ## End Product? (10.02.2023)
-- You can use the Commandline to choose a company
+- Firstly you must create the Databases in model.py
+- Secondly you need to populate the Database with fill.py
+- After that you can use main.py to work on them.
+- You need to use the Commandline to choose a company
 - After you chose a company you can choose between READ, CREATE, UPDATE, DELETE, EXIT
 - In READ you can either have the whole database printed out to you or you can choose what you want to search for
 - In CREATE you can add an item to the database.
