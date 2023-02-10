@@ -49,7 +49,7 @@ def READ():
         while category is None:
             category = input("Category: ")
 
-            if category not in category_dict:
+            if category.lower() not in category_dict:
                 print('\033[1m'+'\nThis category does not exist.'+'\033[0m')
                 print("-----------------------------------")
                 category = None
@@ -207,7 +207,7 @@ def UPDATE():
                 while category is None:
                     category = input("Category you want to change: ")
 
-                    if category not in category_dict:
+                    if category.lower() not in category_dict:
                         print('\033[1m'+'\nThis category does not exist.'+'\033[0m')
                         print("-----------------------------------")
                         category = None
