@@ -381,7 +381,7 @@ while 1:
         'update': UPDATE,
         'exit': EXIT,
     }
-    if action in function_dict:
+    if action.lower() in function_dict:
         function_dict[action.lower()]()
     else:
         print('\033[1m'+'\nThis function does not exist.'+'\033[0m')
